@@ -2,6 +2,12 @@
 
 int main(int ac, char **av)
 {
-	Regex reg(av[1]);
-	std::cout << reg.match(av[2]) << std::endl;
+	if (ac != 3)
+		return(1);
+	
+	try {
+		std::cout << Regex(av[1]).match(av[2]) << std::endl;
+	} catch (const std::runtime_error& e) {
+		std::cout << e.what() << std::endl;
+	}
 }

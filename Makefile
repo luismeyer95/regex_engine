@@ -13,12 +13,14 @@ INC_DIR		=	includes
 
 SRCS	=	NFA.cpp \
 			NFAState.cpp \
-			Regex.cpp
+			Regex.cpp \
+			PatternValidation.cpp
 
 INCLUDE	=	$(addprefix $(INC_DIR)/, \
 				NFA.hpp, \
 				NFAState.hpp, \
 				Regex.hpp \
+				PatternValidation.hpp \
 			)
 
 OBJS		= $(SRCS:.cpp=.o)

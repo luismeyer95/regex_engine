@@ -4,6 +4,8 @@ Regex::Regex(const std::string& pattern)
 	: pattern(pattern), index(0),
 	anchor_start(false), anchor_end(false), automaton()
 {
+	PatternValidation check(pattern);
+	
 	alphabet.reserve(127);
 	for (auto i = 0; i < 127; ++i)
 		alphabet.push_back((char)i);
@@ -181,7 +183,7 @@ NFA Regex::quantify(NFA atm)
 	if (max == -1)
 		return NFA::quantify(min, -1, atm);
 	else if (max < 0 || min < 0 || max < min)
-		throw std::runtime_error("Invalid range specifiers for regex quantifier");
+		throw std::runtime_error("Regex invalid range");
 	
 	return NFA::quantify(min, max, atm);
 }

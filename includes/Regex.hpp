@@ -3,6 +3,7 @@
 #include "header.h"
 
 #include "NFA.hpp"
+#include "PatternValidation.hpp"
 
 class Regex
 {

@@ -72,12 +72,15 @@ NFA NFA::copyAutomaton(NFA nfa)
 
 void NFA::deleteAutomaton(NFA nfa)
 {
-	std::vector<NFAState*> all;
-	NFA::findAllStates(nfa.start, all);
-	for (auto& st : all)
+	if (nfa.start && nfa.end)
 	{
-		delete st;
-		st = nullptr;
+		std::vector<NFAState*> all;
+		NFA::findAllStates(nfa.start, all);
+		for (auto& st : all)
+		{
+			delete st;
+			st = nullptr;
+		}
 	}
 }
 

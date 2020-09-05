@@ -179,7 +179,7 @@ NFA Regex::quantify(NFA atm)
 	int max = smax.empty() ? -1 : std::stoi(smax);
 
 	if (max == -1)
-		NFA::quantify(min, -1, atm);
+		return NFA::quantify(min, -1, atm);
 	else if (max < 0 || min < 0 || max < min)
 		throw std::runtime_error("Invalid range specifiers for regex quantifier");
 	

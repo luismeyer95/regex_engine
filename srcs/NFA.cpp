@@ -154,7 +154,7 @@ NFA NFA::closure(NFA a)
 NFA NFA::quantify(int min, int max, NFA a)
 {
 	if (max == -1)
-		return concat(quantify(min, min, a), closure(copyAutomaton(a)));
+		return concat(quantify(min, min, copyAutomaton(a)), closure(a));
 
 	if (min)
 		return concat(a, quantify(min - 1, max - 1, copyAutomaton(a)));

@@ -28,6 +28,6 @@ String matched: "bcccd"
 * Anchors (`^`, `$`)
 * Any character (`.`)
 * Quantifiers (`*`, `?`, `+`, `{}`)
-* Character classes (`[]`)
+* Basic character classes (ex: `[abc]`, `[A-Z]`, `[^0-9]`)
 * Parenthesis
 * Escaping

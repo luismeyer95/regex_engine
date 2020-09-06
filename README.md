@@ -10,7 +10,7 @@ $ make
 ```
 
 Include the "Regex.hpp" header in your source code, compile and link with "libregex.a".
-Using the example main of this repo:
+Using the example `main.cpp` of this repo:
 
 ```
 $ clang++ main.cpp libregex.a

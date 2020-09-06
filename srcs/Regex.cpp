@@ -18,7 +18,7 @@ Regex::~Regex()
 	NFA::deleteAutomaton(automaton);
 }
 
-bool	Regex::match(const std::string& str)
+std::pair<bool, std::string> Regex::match(const std::string& str)
 {
 	std::vector<NFAState*> current_states;
 	std::vector<NFAState*> visited;
@@ -45,13 +45,18 @@ bool	Regex::match(const std::string& str)
 		{
 			// if end of string is not anchored, return true
 			// as soon as an accepting state is found
+
 			auto it = std::find_if (
 				current_states.begin(),
 				current_states.end(),
 				[] (NFAState *st) { return st->is_end; }
 			);
 			if (it != current_states.end())
-				return true;
+			{
+				// dirty way of getting the length of the matched string
+				size_t len = (&c - &str[0]) + 1;
+				return {true, str.substr(0, len)};
+			}
 		}
 	}
 
@@ -61,12 +66,20 @@ bool	Regex::match(const std::string& str)
 		[] (NFAState *st) { return st->is_end; }
 	);
 
+	bool found = it != current_states.end();
+
 	// if no start anchor set, try to match again for next char until
 	// end of string
 	if (!anchor_start && !str.empty())
-		return it != current_states.end() || match(&str[0] + 1);
+	{
+		std::pair<bool, std::string> next_match = match(&str[0] + 1);
+		return {
+			found || next_match.first,
+			next_match.second
+		};
+	}
 
-	return it != current_states.end();
+	return {found, str};
 }
 
 void	Regex::setNextStates(
@@ -210,19 +223,21 @@ NFA Regex::atom()
 
 NFA	Regex::bracket()
 {
+	std::vector<char> set;
+	set.reserve(127);
+
 	if (peek() == '^')
-		return (next(), setof(false));
+		return (next(), setof(false, set));
 	else
-		return setof(true);
+		return setof(true, set);
 	
 }
 
-NFA Regex::setof(bool include)
+NFA Regex::setof(bool include, std::vector<char>& set)
 {
-	std::vector<char> set;
-	set.reserve(127);
-	while (peek() && peek() != ']')
-		set.push_back(next());
+	subsetof(set);
+	if (peek() != ']')
+		return setof(include, set);
 	
 	if (!include)
 	{
@@ -236,9 +251,24 @@ NFA Regex::setof(bool include)
 		set = std::move(nonset);
 	}
 
-	if (!peek())
-		throw std::runtime_error("Missing end bracket token in regex pattern");
 	return NFA::fromSymbolSet(set);
+}
+
+void Regex::subsetof(std::vector<char>& set)
+{
+	char start = next();
+	set.push_back(start);
+	if (peek() == '-')
+	{
+		eat('-');
+		char end = next();
+		if (!more())
+			throw std::runtime_error("Regex: Class is missing end bracket");
+		if (end < start)
+			throw std::runtime_error("Regex: Invalid ASCII range in class");
+		for (char c = start; c <= end; c++)
+			set.push_back(c);
+	}
 }
 
 NFA Regex::charset()
@@ -276,7 +306,13 @@ char Regex::next()
 void Regex::eat(char token)
 {
 	if (peek() != token)
-		throw std::runtime_error("Invalid token in Regex pattern");
+	{
+		if (!peek())
+			throw std::runtime_error("Regex: Unexpected end of pattern");
+		std::string err = peek() ? std::string(1, peek()) : "(null)";
+		err = "Regex: Invalid token `" + err + "`"; 
+		throw std::runtime_error(err);
+	}
 	++index;
 }
 

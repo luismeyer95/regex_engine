@@ -21,7 +21,7 @@ class Regex
 		Regex(const std::string& pattern);
 		~Regex();
 
-		bool	match(const std::string& str);
+		std::pair<bool, std::string> match(const std::string& str);
 		void	setNextStates(
 			NFAState *state,
 			std::vector<NFAState*>& next_states,
@@ -35,7 +35,8 @@ class Regex
 		NFA quantify(NFA atm);
 		NFA atom();
 		NFA	bracket();
-		NFA setof(bool include);
+		NFA setof(bool include, std::vector<char>& set);
+		void subsetof(std::vector<char>& set);
 		NFA charset();
 
 		char peek();

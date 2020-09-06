@@ -116,11 +116,24 @@ void	PatternValidation::bracket()
 
 void PatternValidation::setof()
 {
-	while (peek() && peek() != ']')
-		next();
+	subsetof();
+	if (peek() != ']')
+		setof();
+}
 
-	if (!peek())
-		throw std::runtime_error("Regex: Missing end bracket token");
+void PatternValidation::subsetof()
+{
+	char start = next();
+	if (peek() == '-')
+	{
+		eat('-');
+		if (!more())
+			throw std::runtime_error("Regex: Class is missing end bracket");
+		if (peek() < start)
+			throw std::runtime_error("Regex: Invalid ASCII range in class");
+		else
+			next();
+	}
 }
 
 void PatternValidation::charset()
@@ -155,9 +168,11 @@ void PatternValidation::eat(char token)
 {
 	if (peek() != token)
 	{
-		std::stringstream s;
-		s << "Regex: Invalid token `" << peek() << "`"; 
-		throw std::runtime_error(s.str());
+		if (!peek())
+			throw std::runtime_error("Regex: Unexpected end of pattern");
+		std::string err = peek() ? std::string(1, peek()) : "(null)";
+		err = "Regex: Invalid token `" + err + "`"; 
+		throw std::runtime_error(err);
 	}
 	++index;
 }

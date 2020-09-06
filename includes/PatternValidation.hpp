@@ -24,6 +24,7 @@ class PatternValidation
 		void atom();
 		void bracket();
 		void setof();
+		void subsetof();
 		void charset();
 
 		char peek();

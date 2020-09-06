@@ -29,6 +29,7 @@ all:	$(NAME)
 
 $(NAME): $(addprefix $(OBJS_DIR)/, $(OBJS))
 	ar rc $(NAME) $(addprefix $(OBJS_DIR)/, $(OBJS))
+	ranlib $(NAME)
 
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.cpp
 	$(CC) $(FLAGS) -c $< -o $@

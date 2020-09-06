@@ -1,5 +1,8 @@
 #include "includes/Regex.hpp"
 
+// ex: match an absolute path of lowercase characters only
+// $ ./a.out '^(/[a-z]*)+/?$' '/yo/ya/'
+
 int main(int ac, char **av)
 {
 	if (ac != 3)

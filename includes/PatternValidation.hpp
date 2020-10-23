@@ -2,7 +2,6 @@
 
 #include "header.h"
 
-
 class PatternValidation
 {
 	private:

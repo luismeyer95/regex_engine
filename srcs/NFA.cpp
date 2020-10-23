@@ -1,4 +1,4 @@
-#include "../includes/NFA.hpp"
+#include <NFA.hpp>
 
 NFA::NFA(NFAState *start, NFAState *end)
 	: start(start), end(end) {}
@@ -36,18 +36,9 @@ NFAState* NFA::deepCopy (
 	};
 
 	for (auto& t : state->transition)
-	{
-		copy->addTransition(
-			t.first,
-			fetch(t.second)
-		);
-	}
+		copy->addTransition(t.first, fetch(t.second));
 	for (auto& eps : state->epsilon_transitions)
-	{
-		copy->addEpsilonTransition(
-			fetch(eps)
-		);
-	}
+		copy->addEpsilonTransition(fetch(eps));
 
 	if (copy->is_end)
 		copy_end = copy;
@@ -184,5 +175,31 @@ NFA NFA::questionmark(NFA a)
 	a.end->addEpsilonTransition(nfa.end);
 	a.end->is_end = false;
 
+	return nfa;
+}
+
+void	capture_state(NFAState *state, int capture, std::vector<NFAState*>& visited)
+{
+	if (std::find(visited.begin(), visited.end(), state) != visited.end())
+		return;
+	visited.push_back(state);
+	if (!state->epsilon_transitions.empty())
+	{
+		for (auto& s : state->epsilon_transitions)
+			capture_state(s, capture, visited);
+	}
+	else
+	{
+		if (state->is_end || state->capture_tags.count(capture))
+			return;
+		state->addCaptureTag(capture);
+		capture_state(state->transition.begin()->second, capture, visited);
+	}
+}
+
+NFA NFA::capture(NFA nfa, int capture)
+{
+	std::vector<NFAState*> visited;
+	capture_state(nfa.start, capture, visited);
 	return nfa;
 }

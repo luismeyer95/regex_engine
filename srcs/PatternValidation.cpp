@@ -1,4 +1,4 @@
-#include "../includes/PatternValidation.hpp"
+#include <PatternValidation.hpp>
 
 PatternValidation::PatternValidation(const std::string& pattern)
 	: pattern(pattern), index(0)
@@ -85,7 +85,7 @@ void PatternValidation::quantify()
 	if (max == -1)
 		return;
 	else if (max < 0 || min < 0 || max < min)
-		throw std::runtime_error("Regex: Invalid quantifier range");
+		throw std::runtime_error("regex: Invalid quantifier range");
 }
 
 void PatternValidation::atom()
@@ -93,6 +93,11 @@ void PatternValidation::atom()
 	if (peek() == '(')
 	{
 		eat('(');
+		if (peek() == '?')
+		{
+			eat('?');
+			eat(':');
+		}
 		expr();
 		eat(')');
 	}
@@ -123,14 +128,21 @@ void PatternValidation::setof()
 
 void PatternValidation::subsetof()
 {
+	if (peek() == '\\')
+	{
+		next();
+		next();
+		return;
+
+	}
 	char start = next();
 	if (peek() == '-')
 	{
 		eat('-');
 		if (!more())
-			throw std::runtime_error("Regex: Class is missing end bracket");
+			throw std::runtime_error("regex: Class is missing end bracket");
 		if (peek() < start)
-			throw std::runtime_error("Regex: Invalid ASCII range in class");
+			throw std::runtime_error("regex: Invalid ASCII range in class");
 		else
 			next();
 	}
@@ -143,13 +155,13 @@ void PatternValidation::charset()
 		eat('\\');
 		// any char
 		if (!more())
-			throw std::runtime_error("Regex: Invalid escape sequence");
+			throw std::runtime_error("regex: Invalid escape sequence");
 		next();
 	}
 	else
 	{
 		if (std::string("?*+").find(peek()) != std::string::npos)
-			throw std::runtime_error("Regex: Misused meta-character token");
+			throw std::runtime_error("regex: Misused meta-character token");
 		next();
 	}
 }
@@ -169,9 +181,9 @@ void PatternValidation::eat(char token)
 	if (peek() != token)
 	{
 		if (!peek())
-			throw std::runtime_error("Regex: Unexpected end of pattern");
+			throw std::runtime_error("regex: Unexpected end of pattern");
 		std::string err = peek() ? std::string(1, peek()) : "(null)";
-		err = "Regex: Invalid token `" + err + "`"; 
+		err = "regex: Invalid token `" + err + "`"; 
 		throw std::runtime_error(err);
 	}
 	++index;

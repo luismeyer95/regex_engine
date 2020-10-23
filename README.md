@@ -9,7 +9,7 @@ Compile the library using `make`:
 $ make
 ```
 
-Include the `Regex.hpp` header in your source code, compile and link with `libregex.a`.
+Include the `regex.hpp` header in your source code, compile and link with `libregex.a`.
 Using the example `main.cpp` of this repo:
 
 ```

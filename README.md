@@ -30,17 +30,20 @@ String matched: "bcccd"
 // Instantiate a regex object with a pattern as argument
 regex rgx(<pattern>);
 
-// A call to the member function `match()` with a string as argument will match that string against the pattern and return the matched substring (if any).
-// Its return type `regex::match_result` contains a bool `success` that is true if there is
-// a match and a string `matched` that will contain the matched substring.
+// 	A call to the member function `match()` with a string as argument will match that string 
+//	against the pattern and return the matched substring (if any).
+// 	Its return type `regex::match_result` contains a bool `success` that is true if there is
+// 	a match and a string `matched` that will contain the matched substring.
 
 regex::match_result res = rgx.match(<string_to_match>);
 if (res.success)
 	std::cout << res.matched << std::end;
 
-// A call to the member function `groupmatch()` with a string as argument will match that string against the pattern and return the set of captures (if any).
-// Its return type `regex::groupmatch_result` contains a bool `success` that is true if there is
-// a match and a vector of strings `matched` that will contain the set of captures, starting with the whole matched substring
+//	A call to the member function `groupmatch()` with a string as argument will match that 
+//	string against the pattern and return the set of captures (if any).
+//	Its return type `regex::groupmatch_result` contains a bool `success` that is true if 
+//	there is a match and a vector of strings `matched` that will contain the set of captures,
+//	starting with the whole matched substring
 
 regex::groupmatch_result groupres = rgx.groupmatch(<string_to_match>)
 if (res.success)

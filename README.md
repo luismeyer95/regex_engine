@@ -3,7 +3,7 @@
 A simplified regex engine made in C++, inspired from Denis Kyashif's implementation (https://deniskyashif.com/2019/02/17/implementing-a-regular-expression-engine/). Builds a non-deterministic finite automaton (NFA) off of an input regex pattern using recursive-descent parsing and matches strings by traversing it.
 Note that this is a learning project and was not built with performance and memory-efficiency in mind.
 
-## Compilation (Unix-like)
+## Compilation (Unix/MAC)
 
 Compile the library using `make`:
 ```

@@ -27,7 +27,8 @@ String matched: "bcccd"
 ## Usage
 
 ```
-// Instantiate a regex object with a pattern as argument
+//	Instantiate a regex object with a pattern as argument
+
 regex rgx(<pattern>);
 
 // 	A call to the member function `match()` with a string as argument will match that string 
@@ -46,8 +47,8 @@ if (res.success)
 //	starting with the whole matched substring
 
 regex::groupmatch_result groupres = rgx.groupmatch(<string_to_match>)
-if (res.success)
-	for (auto& capture : res.matched)
+if (groupres.success)
+	for (auto& capture : groupres.matched)
 		std::cout << capture << std::endl;
 
 ```

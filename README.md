@@ -1,12 +1,13 @@
 # regex_engine
 
-A simplified regex engine made in C++, heavily inspired from Denis Kyashif's implementation (https://deniskyashif.com/2019/02/17/implementing-a-regular-expression-engine/). Builds a non-deterministic finite automaton (NFA) off of an input regex pattern using recursive-descent parsing and matches strings by traversing it.
+A simplified regex engine made in C++, inspired from Denis Kyashif's implementation (https://deniskyashif.com/2019/02/17/implementing-a-regular-expression-engine/). Builds a non-deterministic finite automaton (NFA) off of an input regex pattern using recursive-descent parsing and matches strings by traversing it.
+Note that this is a learning project and was not built with performance and memory-efficiency in mind.
 
 ## Usage
 
 Compile the library using `make`:
 ```
-$ make
+$ make libregex.a
 ```
 
 Include the `regex.hpp` header in your source code, compile and link with `libregex.a`.
@@ -27,7 +28,8 @@ String matched: "bcccd"
 
 * Anchors (`^`, `$`)
 * Any character (`.`)
+* Digit (`\d`) and whitespace (`\s`)
+* Basic character classes (ex: `[^abc]`, `[A-Fa-f]`)
 * Quantifiers (`*`, `?`, `+`, `{}`)
-* Basic character classes (ex: `[abc]`, `[A-Z]`, `[^0-9]`)
-* Parenthesis
+* Capturing and non-capturing groups (`(.+)`, `(?:.+)`)
 * Escaping
